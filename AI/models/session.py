@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, ForeignKey, DateTime,String
+from sqlalchemy import Column, Integer, Float, ForeignKey, DateTime,String,Text, JSON
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from database import Base
@@ -15,7 +15,9 @@ class Session(Base):
     eye_score = Column(Float, nullable=False)
     speech_score = Column(Float, nullable=False)
     overall_score = Column(Float, nullable=False)
-
+    transcript = Column(Text, nullable=True)
+    reference_script_id = Column(Integer, ForeignKey("scripts.id"), nullable=True)
+    analysis_json = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     video_url = Column(String, nullable=True)
     user = relationship("User", backref="sessions")

@@ -85,7 +85,7 @@ def audio_callback(indata, frames, time_info, status):
     
     # Track if user is currently speaking (for beep control)
     rms = np.sqrt(np.mean(flat ** 2))
-    state["speaking_active"] = rms >= pause_detector.silence_threshold
+    state["speaking_active"] = bool(rms >= pause_detector.silence_threshold)
     
     if pause_detected:
         state["last_pause"] = True
@@ -133,7 +133,7 @@ def on_turn(self, event):
     # ---- filler detection ----
     nlp_fillers = detect_fillers_from_text(text, timestamp)
 
-    entry["fillers"] = [f["word"] for f in nlp_fillers]
+    entry["fillers"] = nlp_fillers  # keep full {word, time} objects for frontend
 
     for f in nlp_fillers:
         state["fillers"].append(f)
